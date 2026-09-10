@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+catalog.db
+.pytest_cache/
+.vscode/
+tempCodeRunnerFile.py
+*.db
