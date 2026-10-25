@@ -5,3 +5,6 @@ catalog.db
 .vscode/
 tempCodeRunnerFile.py
 *.db
+.env
+eval_results.json
+parse_cache.json

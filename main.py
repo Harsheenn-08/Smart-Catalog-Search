@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 from sentence_transformers import SentenceTransformer
 from faiss_index import VectorIndex
 from database import get_database_connection, init_db
+from query_parser import parse_query
 
 # Global resources initialized during application startup
 model: Optional[SentenceTransformer] = None
@@ -181,6 +182,23 @@ def search_products(
         }
 
     return results
+
+@app.get("/api/search/smart")
+def smart_search(query: str, top_k: int = 5):
+    """LLM extracts filters from the sentence, then the existing FAISS + SQLite pipeline runs."""
+    filters, used_llm = parse_query(query)
+    results = search_products(
+        query=filters.semantic_query,
+        category=filters.category,
+        max_price=filters.max_price,
+        in_stock_only=filters.in_stock_only,
+        top_k=top_k,
+    )
+    return {
+        "parsed_filters": filters.model_dump(),
+        "used_llm": used_llm,  # False means the LLM call failed and we fell back to the raw query
+        "results": results,
+    }
 
 if __name__ == "__main__":
     import uvicorn
