@@ -1,0 +1,9 @@
+.env
+.git
+.github
+__pycache__
+*.pyc
+catalog.db*
+parse_cache.json
+eval_results.json
+.pytest_cache
